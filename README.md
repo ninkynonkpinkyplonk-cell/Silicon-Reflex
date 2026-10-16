@@ -83,44 +83,6 @@ Default **2^20 slots / 10 MiB**, independent of occupancy. The sample occupies
 only three slots. Exact matching does not normalize case, whitespace, punctuation
 or Unicode. More varied real inputs generally need the standard LLM fallback.
 
-## Prism / Vanta bridge
-
-`prism/reflex_bridge.py` loads the DLL/.so with ctypes, validates and copies the
-table into named shared memory, warms its pages, and pins the Python worker to
-one allowed CPU. Default minimum confidence is **0.90**.
-
-```python
-from prism.reflex_bridge import initialize_reflex, reflex_decide, shutdown_reflex
-
-initialize_reflex()  # Call at Python worker startup.
-label = reflex_decide('example:buy')  # 1; unknown/unavailable/low confidence -> -1
-if label == -1:
-    pass  # Continue the existing standard LLM call here.
-else:
-    pass  # Dispatch through your application's label 0/1/2 handler.
-shutdown_reflex()
-```
-
-`initialize_reflex(min_confidence=0.95, cpu=2)` selects settings.
-`SILICON_REFLEX_ROOT` identifies the native library/table directory;
-`REFLEX_MIN_CONFIDENCE` and `REFLEX_CPU` are supported too.
-Missing/corrupt files or affinity failures disable the shortcut. The first
-decision initializes automatically if startup initialization was omitted; exclude
-that call from steady-state measurements. Fix configuration and restart, or call
-shutdown before retrying a failed initialization.
-
-The main Vanta workspace has a small Python adapter loading this sibling release.
-It initializes when imported by a **Python worker**; it never runs in Electron's
-renderer. The JavaScript LLM pipeline is not silently rerouted: labels 0/1/2 have
-application-specific meanings that must not be guessed. The text bridge includes
-UTF-8 encoding and locking, so its latency is not the historical prehashed figure.
-
-One table owner per native library/process is supported. Do not mix a bridge
-with a separately bound DecisionTable in the same process. Stop calls before
-shutdown or table replacement. CPU affinity applies to the Python worker, not
-the Electron UI, and Windows uses the current processor group. Preloading does
-not lock pages against OS paging. Python still creates small interpreter objects.
-
 ## Named IPC
 
 ```python
