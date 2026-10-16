@@ -1,0 +1,7 @@
+Silicon Reflex original source: Copyright (c) 2026 Bloug. MIT license.
+
+vendor/xxhash.h: Copyright (c) 2012-2023 Yann Collet.
+BSD-2-Clause license; the complete upstream notice and disclaimer are retained
+at the top of that file and must accompany redistributions including binaries.
+Upstream: https://github.com/Cyan4973/xxHash
+Copied from the existing llama.cpp dependency in the Vanta workspace.

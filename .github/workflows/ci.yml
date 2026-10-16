@@ -1,0 +1,30 @@
+name: Native verification
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements-dev.txt
+      - name: Build Windows
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: build_dll.bat
+      - name: Build Linux
+        if: runner.os == 'Linux'
+        run: sh build_dll.sh
+      - run: python trainer.py
+      - run: python -m pytest -q
+      - run: python benchmark_physics.py --iterations 1000000 --report benchmark-ci.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-${{ runner.os }}
+          path: benchmark-ci.json

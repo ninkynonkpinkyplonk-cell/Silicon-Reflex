@@ -1,0 +1,16 @@
+__pycache__/
+*.dll
+*.obj
+*.lib
+*.exp
+decision_table.bin
+*.so
+*.backup-*
+.pytest_cache/
+.venv/
+.env
+.env.*
+datasets/
+*.egg-info/
+build/
+dist/

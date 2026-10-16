@@ -1,0 +1,17 @@
+{
+  "python": "3.12.10",
+  "os": "Windows-11-10.0.26200-SP0",
+  "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "iterations": 1000000,
+  "cpu": 0,
+  "table_bytes": 10485760,
+  "working_keys": 3,
+  "native_lookup_ns": 1.6497,
+  "python_mmap_sync_roundtrip_ns": 1493.9191,
+  "batch_average_median_ns": 1490.315,
+  "batch_average_max_ns": 1536.57,
+  "under_10us_average": true,
+  "native_checksum": 1000001,
+  "python_checksum": 1000001,
+  "mode": "same-process ctypes + named mmap; not two-process IPC latency"
+}
